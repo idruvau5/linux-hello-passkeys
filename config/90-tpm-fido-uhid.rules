@@ -1,0 +1,7 @@
+# Allow the tpm-fido user daemon to create its virtual HID device.
+KERNEL=="uhid", MODE="0660", GROUP="plugdev"
+
+# Allow native browsers and tag confined browsers for the virtual FIDO2 HID.
+SUBSYSTEM=="hidraw", KERNEL=="hidraw*", KERNELS=="0003:1209:F1D0.*", TAG+="security-device", TAG+="uaccess", TAG+="snap_chromium_chromium", TAG+="snap_firefox_firefox"
+SUBSYSTEM=="hidraw", KERNEL=="hidraw*", KERNELS=="0003:1209:F1D0.*", RUN+="/usr/lib/snapd/snap-device-helper $env{ACTION} snap_chromium_chromium $devpath $major:$minor"
+SUBSYSTEM=="hidraw", KERNEL=="hidraw*", KERNELS=="0003:1209:F1D0.*", RUN+="/usr/lib/snapd/snap-device-helper $env{ACTION} snap_firefox_firefox $devpath $major:$minor"

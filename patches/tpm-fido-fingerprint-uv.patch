@@ -1,0 +1,36 @@
+diff --git a/ctap2/getinfo.go b/ctap2/getinfo.go
+index 263ab6b..6276fc2 100644
+--- a/ctap2/getinfo.go
++++ b/ctap2/getinfo.go
+@@ -33,9 +33,11 @@ func (h *Handler) GetInfo() *GetInfoResponse {
+ 		// Maximum message size
+ 		MaxMsgSize: 1200,
+ 
+-		// Supported PIN/UV auth protocols
+-		// Protocol 1 is needed for hmac-secret even without PIN
+-		PinUvAuthProtocols: []uint{1},
++		// Do not advertise a PIN/UV protocol. This authenticator has local
++		// fingerprint UV, but no authenticator PIN implementation. Advertising
++		// protocol 1 makes browsers open a PIN flow that cannot complete.
++		// The uv option above makes CTAP request local fingerprint verification.
++		PinUvAuthProtocols: nil,
+ 
+ 		// Maximum credentials in allowList/excludeList
+ 		MaxCredentialCountInList: 8,
+diff --git a/fidohid/fidohid.go b/fidohid/fidohid.go
+index 261c5e4..1ba4e0a 100644
+--- a/fidohid/fidohid.go
++++ b/fidohid/fidohid.go
+@@ -118,6 +118,12 @@ func New(name string, handler CommandHandler) (*Device, error) {
+ 	if err != nil {
+ 		return nil, err
+ 	}
++	// uhid otherwise fills the device's unique field with random binary bytes.
++	// Linux FIDO clients read that field as a UTF-8 serial string; binary data
++	// makes otherwise valid virtual authenticators disappear during enumeration.
++	if err := dev.SetUniq("tpm-fido"); err != nil {
++		return nil, err
++	}
+ 
+ 	// Appear as a USB FIDO2 device
+ 	dev.Data.Bus = 0x03       // BUS_USB
