@@ -1,5 +1,7 @@
 # Linux ELAN fingerprint and TPM-FIDO passkeys
 
+> Legacy combined package. The maintained components are now split into separate repositories: [ELAN7001 fingerprint](https://github.com/idruvau5/asus-elan7001-fingerprint-linux), [TPM-FIDO passkeys](https://github.com/idruvau5/linux-tpm-fido-passkeys), [VivoBook audio](https://github.com/idruvau5/asus-vivobook-audio-fix), and [VivoBook display color](https://github.com/idruvau5/asus-vivobook-display-color).
+
 This package reproduces the working configuration for ASUS VivoBook models exposing an ELAN7001/eFSA96SA fingerprint sensor. It builds the community ELAN SPI `sigfm` libfprint branch with a Windows-style press capture path, then installs a TPM-backed FIDO2 HID authenticator. The fingerprint sensor authorizes passkeys and WebAuthn operations; private credential keys remain protected by the TPM.
 
 The FIDO2 authenticator is global at the standard HID/WebAuthn layer. Chrome, Firefox, and password managers that support FIDO2 can use it. It is not Microsoft’s Windows Hello binary. Linux login remains provided by fprintd.
