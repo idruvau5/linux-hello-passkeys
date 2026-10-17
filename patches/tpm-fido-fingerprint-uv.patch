@@ -34,3 +34,30 @@ index 261c5e4..1ba4e0a 100644
  
  	// Appear as a USB FIDO2 device
  	dev.Data.Bus = 0x03       // BUS_USB
+diff --git a/userpresence/userpresence.go b/userpresence/userpresence.go
+index 5e1d67b..11664dc 100644
+--- a/userpresence/userpresence.go
++++ b/userpresence/userpresence.go
+@@ -90,12 +90,16 @@ func (up *UserPresence) promptFingerprint(req *request, prompt string) {
+ 
+ 	log.Printf("userpresence: prompt=%s", prompt)
+ 
+-	// Send notification to user (non-blocking)
+-	notifyCmd := exec.Command("notify-send", "-u", "critical", "-t", "30000",
+-		"TPM-FIDO", prompt+"\n\nTouch fingerprint sensor to confirm.")
+-	if err := notifyCmd.Start(); err != nil {
+-		log.Printf("userpresence: notify-send failed to start: %v", err)
+-		// Continue anyway - fingerprint verification is the important part
++	// The browser or password manager already displays the authenticator
++	// prompt. Cinnamon treats critical notifications as persistent, so an
++	// unconditional notify-send leaves stale "touch the sensor" popups after
++	// cancellation or completion. Keep desktop notification opt-in and short.
++	if os.Getenv("TPM_FIDO_NOTIFY") == "1" {
++		notifyCmd := exec.Command("notify-send", "-u", "normal", "-t", "4000",
++			"TPM-FIDO", prompt+"\n\nTouch fingerprint sensor to confirm.")
++		if err := notifyCmd.Start(); err != nil {
++			log.Printf("userpresence: notify-send failed to start: %v", err)
++		}
+ 	}
+ 
+ 	// Run fprintd-verify with context timeout

@@ -15,6 +15,7 @@ This laptop is an ASUS VivoBook X530FN/S530FN with an ELAN7001 fingerprint senso
 - uhid rule: `/etc/udev/rules.d/90-tpm-fido-uhid.rules`
 - Enrolled fingerprint daemon: `fprintd` (`press` mode)
 - CTAP PIN capability: intentionally not advertised; fingerprint UV is used instead
+- Desktop notification: disabled by default to prevent stale Cinnamon popups; browser prompt is authoritative
 - ELAN capture behavior: one press frame, then acquisition stops immediately; this prevents the Linux wait-up polling loop from triggering the sensor thermal guard
 
 ## Verify after login/reboot

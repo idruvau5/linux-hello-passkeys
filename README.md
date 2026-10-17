@@ -3,6 +3,7 @@
 This package reproduces the working configuration for ASUS VivoBook models exposing an ELAN7001/eFSA96SA fingerprint sensor. It builds the community ELAN SPI `sigfm` libfprint branch with a Windows-style press capture path, then installs a TPM-backed FIDO2 HID authenticator. The fingerprint sensor authorizes passkeys and WebAuthn operations; private credential keys remain protected by the TPM.
 
 The FIDO2 authenticator is global at the standard HID/WebAuthn layer. Chrome, Firefox, and password managers that support FIDO2 can use it. It is not Microsoft’s Windows Hello binary. Linux login remains provided by fprintd.
+The installer disables the bridge’s persistent desktop notification by default; the browser or password manager supplies the prompt. Set `TPM_FIDO_NOTIFY=1` only if you want a short four-second desktop reminder.
 
 ## One-command install
 
